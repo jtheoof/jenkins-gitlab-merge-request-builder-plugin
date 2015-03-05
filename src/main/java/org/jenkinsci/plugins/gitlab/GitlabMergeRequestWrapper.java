@@ -72,6 +72,8 @@ public class GitlabMergeRequestWrapper {
             _sourceBranch = gitlabMergeRequest.getSourceBranch();
         }
 
+        _logger.info("Checking merge request with id: " + _id + " iid: " + _iid);
+
         if (_sourceProject == null) {
             try {
                 GitlabAPI api = _builder.getGitlab().get();
@@ -106,7 +108,9 @@ public class GitlabMergeRequestWrapper {
             }
             if (_shouldRun) {
                 _logger.info("Build is supposed to run");
-                _mergeRequestStatus.setLatestCommitOfMergeRequest(_id.toString(), latestCommit.getId());
+                if (_id != null) {
+                    _mergeRequestStatus.setLatestCommitOfMergeRequest(_id.toString(), latestCommit.getId());
+                }
             }
         } catch (IOException e) {
             _logger.log(Level.SEVERE, "Failed to fetch commits for Merge Request " + gitlabMergeRequest.getId());
